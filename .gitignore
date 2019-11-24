@@ -1,4 +1,5 @@
 node_modules
-storage/cache
-storage/trees
+storage/cache/versions.json
+storage/cache/tree*
+storage/trees/*.csv
 .idea

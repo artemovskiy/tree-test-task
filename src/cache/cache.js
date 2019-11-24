@@ -20,7 +20,15 @@ class Cache {
     }
 
     async getTreesList() {
-        return await fse.readJson(this.versionsPath)
+        try {
+            return await fse.readJson(this.versionsPath)
+        } catch (e) {
+            if(e.code === "ENOENT"){
+                await fse.writeJson(this.versionsPath, []);
+                return []
+            }
+            throw e
+        }
     }
 
     async getTreeCache(tree) {
