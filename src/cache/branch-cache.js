@@ -1,3 +1,4 @@
+const fs = require("fs").promises
 const fse = require("fs-extra")
 const path = require("path")
 
@@ -13,6 +14,14 @@ class BranchCache {
 
     async getData(){
         return await fse.readJson(this.path);
+    }
+
+    async update(data){
+        await fse.writeJson(this.path, data, {spaces: 2});
+    }
+
+    async drop(){
+        await fs.unlink(this.path);
     }
 
 }

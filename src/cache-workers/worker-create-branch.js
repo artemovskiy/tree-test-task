@@ -16,5 +16,9 @@ const cache = new Cache();
     const treeCache = await cache.getTreeCache(query.name);
     const data = await tree.getData();
     const branch = createBranch(data, query.id);
-    await treeCache.createBranch(branch);
+    if(!branch){
+        process.exit(1)
+    } else {
+        await treeCache.createBranch(branch);
+    }
 })();

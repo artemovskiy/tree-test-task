@@ -33,13 +33,6 @@ class TreeCache {
         }
     }
 
-    async dropBranches() {
-        const files = await fs.readdir(this.path);
-        for(let file of files){
-            await fs.unlink(path.join(this.path, file));
-        }
-    }
-
     getBranchPath(branch) {
         return path.join(this.path, branch + ".json")
     }

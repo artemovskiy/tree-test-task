@@ -14,44 +14,48 @@ const cache = new Cache()
 const cacheWorkers = new CacheWorkersManager()
 
 const getQuery = req => {
-    //const url = new URL();
     const url = new URL(req.url, "http://localhost:3000");
     const queryParam = url.searchParams.get("query");
     return JSON.parse(queryParam);
 }
 
 const server = http.createServer((async (req, res) => {
-    console.log(`Worker ${cluster.worker.id} is processing request`)
-    const query = getQuery(req)
-    const tree = await repository.getTree(query.tree)
-    if (!tree) {
-        res.end("error: tree not found")
-    }
-    const treeCache = await cache.getTreeCache(query.tree)
-    if (!treeCache) {
-        cacheWorkers.createTreeCache(query)
-        const treeData = await tree.getData()
-        const branch = createBranch(treeData, query.id)
+    try{
+        const query = getQuery(req)
+        const tree = await repository.getTree(query.tree)
+        if (!tree) {
+            res.end("error: tree not found")
+        }
+        const treeCache = await cache.getTreeCache(query.tree)
+        if (!treeCache) {
+            cacheWorkers.createTreeCache(query)
+            const treeData = await tree.getData()
+            const branch = createBranch(treeData, query.id)
+            res.end(JSON.stringify(branch))
+            return
+        }
+        if (treeCache.version < tree.version) {
+            cacheWorkers.regenerateTreeCache(query.tree)
+            const treeData = await tree.getData()
+            const branch = createBranch(treeData, query.id)
+            res.end(JSON.stringify(branch))
+            return
+        }
+        const branchCache = await treeCache.getBranch(query.id)
+        if (!branchCache) {
+            cacheWorkers.createBranchCache(query)
+            const treeData = await tree.getData()
+            const branch = createBranch(treeData, query.id)
+            res.end(JSON.stringify(branch))
+            return
+        }
+        const branch = await branchCache.getData();
         res.end(JSON.stringify(branch))
-        return
+    } catch (e) {
+        res.statusCode = 500;
+        res.end(JSON.stringify(e))
+        console.error(e)
     }
-    if (treeCache.version < tree.version) {
-        cacheWorkers.regenerateTreeCache(query.tree)
-        const treeData = await tree.getData()
-        const branch = createBranch(treeData, query.id)
-        res.end(JSON.stringify(branch))
-        return
-    }
-    const branchCache = await treeCache.getBranch(query.id)
-    if (!branchCache) {
-        cacheWorkers.createBranchCache(query)
-        const treeData = await tree.getData()
-        const branch = createBranch(treeData, query.id)
-        res.end(JSON.stringify(branch))
-        return
-    }
-    const branch = await branchCache.getData();
-    res.end(JSON.stringify(branch))
 }))
 
 server.listen(PORT, () => {
