@@ -1,5 +1,6 @@
 const cluster = require("cluster")
 const http = require("http")
+const {URL} = require("url");
 
 const Repository = require("./db/repository")
 const Cache = require("./cache/cache")
@@ -12,10 +13,12 @@ const repository = new Repository()
 const cache = new Cache()
 const cacheWorkers = new CacheWorkersManager()
 
-const getQuery = req => ({
-    tree: "tree1",
-    id: 1
-})
+const getQuery = req => {
+    //const url = new URL();
+    const url = new URL(req.url, "http://localhost:3000");
+    const queryParam = url.searchParams.get("query");
+    return JSON.parse(queryParam);
+}
 
 const server = http.createServer((async (req, res) => {
     console.log(`Worker ${cluster.worker.id} is processing request`)
