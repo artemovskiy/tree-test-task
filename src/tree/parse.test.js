@@ -1,4 +1,4 @@
-const parse = require("./parse")
+const parse = require("./parse");
 
 describe("parse", () => {
 
@@ -8,7 +8,7 @@ describe("parse", () => {
 3,third,4
 4,forth,1
 5,fifth,2`;
-        const actual = parse(input)
+        const actual = parse(input);
         expect(actual).toEqual([
             {id: 1, name: "first", parent: undefined},
             {id: 2, name: "second", parent: 1},
@@ -17,4 +17,4 @@ describe("parse", () => {
             {id: 5, name: "fifth", parent: 2},
         ])
     })
-})
+});

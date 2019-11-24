@@ -1,15 +1,14 @@
-const fs = require("fs").promises
-const fse = require("fs-extra")
-const path = require("path")
+const fs = require("fs").promises;
+const fse = require("fs-extra");
+const path = require("path");
 
-const PATH = path.join(".", "storage", "cache")
+const PATH = path.join(".", "storage", "cache");
 
 class BranchCache {
 
     constructor(tree, rootId){
-        this.tree = tree
+        this.tree = tree;
         this.path = path.join(PATH, tree, rootId + ".json");
-        this.rootId = rootId
     }
 
     async getData(){
@@ -26,4 +25,4 @@ class BranchCache {
 
 }
 
-module.exports = BranchCache
+module.exports = BranchCache;

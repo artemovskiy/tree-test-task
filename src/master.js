@@ -23,7 +23,7 @@ const handleMessage = message => {
             return;
         }
         case "regenerateTreeCache": {
-            manager.regenerateTreeCache(message.tree)
+            manager.regenerateTreeCache(message.tree);
             return;
         }
         default: {

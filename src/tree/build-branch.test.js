@@ -1,4 +1,4 @@
-const buildBranch = require("./build-branch")
+const buildBranch = require("./build-branch");
 
 describe("buildBranch", () => {
 
@@ -9,9 +9,9 @@ describe("buildBranch", () => {
             {id: 3, name: "third", parent: 4},
             {id: 4, name: "forth", parent: 1},
             {id: 5, name: "fifth", parent: 2},
-        ]
+        ];
 
-        const branch = buildBranch(items, 4)
+        const branch = buildBranch(items, 4);
         expect(branch).toEqual({
             id: 4,
             name: "forth",
@@ -23,7 +23,7 @@ describe("buildBranch", () => {
                 }
             ]
         })
-    })
+    });
 
     test("should more complex job", () => {
         const items = [
@@ -37,9 +37,9 @@ describe("buildBranch", () => {
             {id: 8, name: "eighth", parent: 3},
             {id: 9, name: "ninth", parent: 3},
             {id: 10, name: "tenth", parent: 7},
-        ]
+        ];
 
-        const branch = buildBranch(items, 4)
+        const branch = buildBranch(items, 4);
         //console.log(items)
         expect(branch).toEqual({
             id: 4,
@@ -76,4 +76,4 @@ describe("buildBranch", () => {
         })
 
     })
-})
+});

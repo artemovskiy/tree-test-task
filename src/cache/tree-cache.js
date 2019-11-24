@@ -1,21 +1,21 @@
-const fs = require("fs").promises
-const fse = require("fs-extra")
-const path = require("path")
+const fs = require("fs").promises;
+const fse = require("fs-extra");
+const path = require("path");
 
 const BranchCache = require("./branch-cache");
 
-const PATH = path.join(".", "storage", "cache")
+const PATH = path.join(".", "storage", "cache");
 
 class TreeCache {
 
     constructor(name, version) {
         this.name = name;
-        this.path = path.join(PATH, name)
+        this.path = path.join(PATH, name);
         this.version = version
     }
 
     async getBranchesList() {
-        const files = await fs.readdir(this.path)
+        const files = await fs.readdir(this.path);
         return files.map(item => Number(path.basename(item, ".json")));
     }
 
@@ -38,7 +38,7 @@ class TreeCache {
     }
 
     async createBranch(branch) {
-        await fse.writeJson(this.getBranchPath(branch.id), branch, {spaces: 2})
+        await fse.writeJson(this.getBranchPath(branch.id), branch, {spaces: 2});
         return new BranchCache(this.name, branch.id);
     }
 
