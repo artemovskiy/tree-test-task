@@ -30,7 +30,7 @@ const handleMessage = message => {
             console.error(`unknown message type: ${message.type}`)
         }
     }
-}
+};
 
 for (let i = 0; i < httpWorkersCount; i++){
     const childProcess = cluster.fork();
