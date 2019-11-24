@@ -19,6 +19,11 @@ const getQuery = req => {
     return JSON.parse(queryParam);
 };
 
+const getBranch = async (tree, id) => {
+    const treeData = await tree.getData();
+    return createBranch(treeData, id);
+};
+
 const server = http.createServer((async (req, res) => {
     try{
         const query = getQuery(req);
@@ -29,24 +34,18 @@ const server = http.createServer((async (req, res) => {
         const treeCache = await cache.getTreeCache(query.tree);
         if (!treeCache) {
             cacheWorkers.createTreeCache(query);
-            const treeData = await tree.getData();
-            const branch = createBranch(treeData, query.id);
-            res.end(JSON.stringify(branch));
+            res.end(JSON.stringify(await getBranch(tree, query.id)));
             return
         }
         if (treeCache.version < tree.version) {
             cacheWorkers.regenerateTreeCache(query.tree);
-            const treeData = await tree.getData();
-            const branch = createBranch(treeData, query.id);
-            res.end(JSON.stringify(branch));
+            res.end(JSON.stringify(await getBranch(tree, query.id)));
             return
         }
         const branchCache = await treeCache.getBranch(query.id);
         if (!branchCache) {
             cacheWorkers.createBranchCache(query);
-            const treeData = await tree.getData();
-            const branch = createBranch(treeData, query.id);
-            res.end(JSON.stringify(branch));
+            res.end(JSON.stringify(await getBranch(tree, query.id)));
             return
         }
         const branch = await branchCache.getData();
