@@ -4,7 +4,7 @@ const {URL} = require("url");
 
 const Repository = require("./db/repository")
 const Cache = require("./cache/cache")
-const CacheWorkersManager = require("./cache-workers/manager")
+const CacheWorkersManager = require("./cache-workers/remote-manager")
 const createBranch = require("./tree/build-branch")
 
 const PORT = 3000
